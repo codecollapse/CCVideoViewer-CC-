@@ -8,17 +8,21 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -38,6 +42,7 @@ public class CCVideoViewer extends ConstraintLayout {
     private VideoView videoView;
     private SeekBar seekBar;
     private CCSeekBar brightnessSeekBar;
+    private CCSeekBar volumeSeekBar;
     private ImageView imageViewPlayPause;
     private ImageView imageViewVPlayPause;
     private ImageView imageViewRotateRight;
@@ -47,8 +52,10 @@ public class CCVideoViewer extends ConstraintLayout {
     private TextView textViewPlusTen;
     private TextView textViewMinusTen;
     private TextView textViewVideoTitle;
+    private TextView textViewLoading;
     private ConstraintLayout constraintLayout;
     private ConstraintLayout outerLayout;
+    private ProgressBar progressBar;
     private String videoDuration;
     private String currentDuration;
     private Uri videoUri;
@@ -56,6 +63,7 @@ public class CCVideoViewer extends ConstraintLayout {
     private int brightness;
     public static boolean isOuterLayoutVisible;
     private GestureDetector mDetector;
+    private AudioManager audioManager = null;
     private Handler handler =  new Handler();
 
     public CCVideoViewer(Context context) {
@@ -86,12 +94,24 @@ public class CCVideoViewer extends ConstraintLayout {
         textViewMinusTen = rootView.findViewById(R.id.textViewMinusTen);
         textViewVideoTitle = rootView.findViewById(R.id.textViewVideoTitle);
         brightnessSeekBar = (CCSeekBar) findViewById(R.id.brightnessSeekBar);
-
+        volumeSeekBar = (CCSeekBar) findViewById(R.id.volumeSeekBar);
+        progressBar = (ProgressBar) findViewById(R.id.progress_circular);
+        textViewLoading = (TextView) findViewById(R.id.textViewLoading);
+       // volumeSeekBar.setOnKeyListener(mContext);
 
         brightness = getScreenBrightness(mContext);
         setScreenBrightness(brightness,mContext);
         brightnessSeekBar.setMax(225);
         brightnessSeekBar.setProgress(brightness);
+
+        audioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
+        int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        Log.d("Controls", "InitializeControls: " + maxVolume);
+        volumeSeekBar.setMax(audioManager
+                .getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+        volumeSeekBar.setProgress(audioManager
+                .getStreamVolume(AudioManager.STREAM_MUSIC));
+
 
         mDetector = new GestureDetector(mContext, new LayoutGestureDetector());
         View.OnTouchListener touchListener = new View.OnTouchListener() {
@@ -185,9 +205,28 @@ public class CCVideoViewer extends ConstraintLayout {
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
+        volumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+        {
+            @Override
+            public void onStopTrackingTouch(SeekBar arg0)
+            {
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar arg0)
+            {
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar arg0, int progress, boolean arg2)
+            {
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
+            }
+        });
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
+                videoView.start();
                 seekBar.setMax(videoView.getDuration());
                 seekBar.postDelayed(onEverySecond, 1000);
                 mp.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
@@ -202,12 +241,40 @@ public class CCVideoViewer extends ConstraintLayout {
                 });
             }
         });
+        final MediaPlayer.OnInfoListener onInfoToPlayStateListener = new MediaPlayer.OnInfoListener() {
 
+            @Override
+            public boolean onInfo(MediaPlayer mp, int what, int extra) {
+                switch (what) {
+                    case MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START: {
+                        progressBar.setVisibility(View.GONE);
+                        textViewLoading.setVisibility(GONE);
+
+                        return true;
+                    }
+                    case MediaPlayer.MEDIA_INFO_BUFFERING_START: {
+                        progressBar.setVisibility(View.VISIBLE);
+                        textViewLoading.setVisibility(VISIBLE);
+                        constraintLayout.setVisibility(GONE);
+                        return true;
+                    }
+                    case MediaPlayer.MEDIA_INFO_BUFFERING_END: {
+                        progressBar.setVisibility(View.GONE);
+                        textViewLoading.setVisibility(GONE);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
+
+        videoView.setOnInfoListener(onInfoToPlayStateListener);
     }
 
     public void setVideoUrl(Uri uri) {
         videoUri = uri;
         videoView.setVideoURI(uri);
+        videoView.requestFocus();
         textViewCurrentDuration.setText("00:00");
         textViewDuration.setText(getVideoDuration(videoView.getDuration()));
       //  textViewDuration.setText("00:00" + " / " + getVideoDuration(videoView.getDuration()));
@@ -219,7 +286,7 @@ public class CCVideoViewer extends ConstraintLayout {
         CCAnimation.FadeInAnimation(constraintLayout);
         AutoHideViewTimer();
         HideNavAndStatusBar(mContext);
-        videoView.start();
+
     }
 
     public void setVideoTitle(String title) {
@@ -290,7 +357,7 @@ public class CCVideoViewer extends ConstraintLayout {
     private void HalfRotationRightAnimation() {
         float mAngleToRotate = 90f * 1; // rotate 12 rounds
         final RotateAnimation wheelRotation = new RotateAnimation(0.0f, mAngleToRotate, imageViewRotateRight.getWidth() / 2.0f, imageViewRotateRight.getHeight() / 2.0f);
-        wheelRotation.setDuration(400); // rotate 12 rounds in 3 seconds
+        wheelRotation.setDuration(300); // rotate 12 rounds in 3 seconds
         wheelRotation.setInterpolator(mContext, android.R.interpolator.accelerate_decelerate);
         imageViewRotateRight.startAnimation(wheelRotation);
 
@@ -313,7 +380,7 @@ public class CCVideoViewer extends ConstraintLayout {
     private void HalfRotationLeftAnimation() {
         float mAngleToRotate = -90f * 1; // rotate 12 rounds
         RotateAnimation wheelRotation = new RotateAnimation(0.0f, mAngleToRotate, imageViewRotateLeft.getWidth() / 2.0f, imageViewRotateRight.getHeight() / 2.0f);
-        wheelRotation.setDuration(400); // rotate 12 rounds in 3 seconds
+        wheelRotation.setDuration(300); // rotate 12 rounds in 3 seconds
         wheelRotation.setInterpolator(mContext, android.R.interpolator.accelerate_decelerate);
         imageViewRotateLeft.startAnimation(wheelRotation);
 
@@ -446,6 +513,19 @@ public class CCVideoViewer extends ConstraintLayout {
         } else {
             ((Activity) mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        AudioManager audio = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+        int currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            volumeSeekBar.setProgress(currentVolume);
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            volumeSeekBar.setProgress(currentVolume);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     private class LayoutGestureDetector extends GestureDetector.SimpleOnGestureListener {

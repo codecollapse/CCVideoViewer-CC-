@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.SeekBar;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 

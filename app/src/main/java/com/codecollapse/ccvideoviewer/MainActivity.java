@@ -17,11 +17,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // String path = "android.resource://" + getPackageName() + "/" + R.raw.bigbuckbunny;
-        Uri uri = Uri.parse("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4");
+         String path = "android.resource://" + getPackageName() + "/" + R.raw.rango;
+      //  Uri uri = Uri.parse("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4");
+        Uri uri = Uri.parse("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4");
         ccVideoViewer = (CCVideoViewer) findViewById(R.id.ccVideoViewer);
-        ccVideoViewer.setVideoUrl(uri);
-        ccVideoViewer.setVideoTitle("Funny Bunny");
+        ccVideoViewer.setVideoUrl(Uri.parse(path));
+        ccVideoViewer.setVideoTitle("Rango");
         // ccVideoViewer.setOrientation(true);
         ccVideoViewer.startVideo();
     }

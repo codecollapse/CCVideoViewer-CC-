@@ -22,10 +22,40 @@
 
     </VideoView>
 
+    <ProgressBar
+        android:id="@+id/progress_circular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </ProgressBar>
+
+    <TextView
+        android:id="@+id/textViewLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:textSize="16sp"
+        android:visibility="gone"
+        android:textColor="@color/wight"
+        android:textStyle="bold"
+        android:layout_marginStart="6dp"
+        android:text="Loading..."
+        app:layout_constraintBottom_toBottomOf="@+id/progress_circular"
+        app:layout_constraintStart_toEndOf="@+id/progress_circular"
+        app:layout_constraintTop_toTopOf="@+id/progress_circular">
+
+    </TextView>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         android:background="@color/transparentBlack"
         app:layout_constraintBottom_toBottomOf="@+id/videoView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -86,16 +116,25 @@
             app:layout_constraintTop_toTopOf="@+id/imageViewVPlayPause">
 
         </ImageView>
+        <com.codecollapse.ccvideoviewer.CCVideoViewer.CCSeekBar
+        android:id="@+id/brightnessSeekBar"
+        android:layout_width="30dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewRotateLeft"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageViewRotateLeft">
+
+    </com.codecollapse.ccvideoviewer.CCVideoViewer.CCSeekBar>
 
         <com.codecollapse.ccvideoviewer.CCVideoViewer.CCSeekBar
-            android:id="@+id/brightnessSeekBar"
+            android:id="@+id/volumeSeekBar"
             android:layout_width="30dp"
             android:layout_height="100dp"
-            android:layout_marginStart="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageViewRotateLeft"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageViewRotateLeft"
-            app:layout_constraintVertical_bias="0.533">
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageViewRotateRight"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/imageViewRotateRight">
 
         </com.codecollapse.ccvideoviewer.CCVideoViewer.CCSeekBar>
 
