@@ -1,0 +1,3 @@
+rootProject.name='CCVideoViewer'
+include ':app'
+include ':ccvideoviewer'
