@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -515,17 +516,16 @@ public class CCVideoViewer extends ConstraintLayout {
         }
     }
 
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+
         AudioManager audio = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         int currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-            volumeSeekBar.setProgress(currentVolume);
-            return true;
-        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            volumeSeekBar.setProgress(currentVolume);
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
+        Toast.makeText(mContext, " Volume " + currentVolume, Toast.LENGTH_SHORT).show();
+       volumeSeekBar.setProgress(currentVolume);
+
+        return super.dispatchKeyEvent(event);
+
     }
 
     private class LayoutGestureDetector extends GestureDetector.SimpleOnGestureListener {

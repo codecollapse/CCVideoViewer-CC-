@@ -55,7 +55,6 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
         android:background="@color/transparentBlack"
         app:layout_constraintBottom_toBottomOf="@+id/videoView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -70,6 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:padding="5dp"
+            android:letterSpacing="0.1"
             android:textColor="@color/wight"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -81,8 +81,9 @@
 
         <ImageView
             android:id="@+id/imageViewVPlayPause"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:elevation="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/imageViewRotateRight"
             app:layout_constraintHorizontal_bias="0.5"
@@ -91,10 +92,10 @@
 
         <ImageView
             android:id="@+id/imageViewRotateRight"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:padding="10dp"
-            android:src="@drawable/ic_forward_10"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@drawable/icons8_forward_10"
+            android:tint="@color/wight"
             app:layout_constraintBottom_toBottomOf="@+id/imageViewVPlayPause"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -105,10 +106,10 @@
 
         <ImageView
             android:id="@+id/imageViewRotateLeft"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:padding="10dp"
-            android:src="@drawable/ic_replay_10"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@drawable/icons8_replay_10"
+            android:tint="@color/wight"
             app:layout_constraintBottom_toBottomOf="@+id/imageViewVPlayPause"
             app:layout_constraintEnd_toStartOf="@+id/imageViewVPlayPause"
             app:layout_constraintHorizontal_bias="0.5"
@@ -132,6 +133,7 @@
             android:layout_width="30dp"
             android:layout_height="100dp"
             android:layout_marginEnd="16dp"
+           android:thumb="@null"
             app:layout_constraintBottom_toBottomOf="@+id/imageViewRotateRight"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/imageViewRotateRight">
@@ -187,6 +189,8 @@
             android:id="@+id/seekBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:thumb="@drawable/progress_thumb"
+            android:progressTint="@color/md_yellow_400"
             app:layout_constraintBottom_toTopOf="@+id/innerConstrainLayout"
             app:layout_constraintEnd_toStartOf="@+id/textViewDuration"
             app:layout_constraintStart_toEndOf="@+id/textViewCurrentDuration">
