@@ -179,6 +179,10 @@ public class CCVideoViewer extends ConstraintLayout {
                 if (fromUser) {
                     // this is when actually seekbar has been seeked to a new position
                     videoView.seekTo(progress);
+                    videoDuration = getVideoDuration(videoView.getDuration());
+                    currentDuration = getCurrentDuration(videoView.getCurrentPosition());
+                    textViewCurrentDuration.setText(currentDuration);
+                    textViewDuration.setText(videoDuration);
                 }
             }
 
@@ -268,7 +272,6 @@ public class CCVideoViewer extends ConstraintLayout {
                 return false;
             }
         };
-
         videoView.setOnInfoListener(onInfoToPlayStateListener);
     }
 
