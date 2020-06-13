@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -66,6 +68,7 @@ public class CCVideoViewer extends ConstraintLayout {
     private GestureDetector mDetector;
     private AudioManager audioManager = null;
     private Handler handler =  new Handler();
+    boolean fitCenter = true;
 
     public CCVideoViewer(Context context) {
         super(context);
@@ -172,6 +175,7 @@ public class CCVideoViewer extends ConstraintLayout {
                 Rewind();
             }
         });
+
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -336,7 +340,7 @@ public class CCVideoViewer extends ConstraintLayout {
 
         }
     };
-
+    
     private void AutoHideViewTimer(){
 
         Runnable eventRunnable = new Runnable() {

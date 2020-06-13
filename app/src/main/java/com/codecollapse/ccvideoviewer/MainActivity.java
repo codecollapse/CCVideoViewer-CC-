@@ -23,7 +23,9 @@ public class MainActivity extends AppCompatActivity {
         ccVideoViewer = (CCVideoViewer) findViewById(R.id.ccVideoViewer);
         ccVideoViewer.setVideoUrl(Uri.parse(path));
         ccVideoViewer.setVideoTitle("Rango");
-        // ccVideoViewer.setOrientation(true);
+      // ccVideoViewer.fitToCenter();
+      //  ccVideoViewer.setFullScreen();
+//         ccVideoViewer.setOrientation(true);
         ccVideoViewer.startVideo();
     }
 
