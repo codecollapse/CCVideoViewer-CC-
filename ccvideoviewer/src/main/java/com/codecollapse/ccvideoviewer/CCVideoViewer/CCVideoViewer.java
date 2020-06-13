@@ -340,7 +340,7 @@ public class CCVideoViewer extends ConstraintLayout {
 
         }
     };
-    
+
     private void AutoHideViewTimer(){
 
         Runnable eventRunnable = new Runnable() {
