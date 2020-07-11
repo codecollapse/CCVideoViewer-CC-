@@ -2,5 +2,5 @@
 
  maven {
             url "https://jitpack.io"
-            credentials { username authToken }
+            credentials { username jp_onq4ihmqumm1rsv9smh7r163pe }
        }
