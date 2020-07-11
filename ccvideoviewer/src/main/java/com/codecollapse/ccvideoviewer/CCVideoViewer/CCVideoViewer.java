@@ -528,7 +528,7 @@ public class CCVideoViewer extends ConstraintLayout {
 
         AudioManager audio = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         int currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
-        Toast.makeText(mContext, " Volume " + currentVolume, Toast.LENGTH_SHORT).show();
+
        volumeSeekBar.setProgress(currentVolume);
 
         return super.dispatchKeyEvent(event);
